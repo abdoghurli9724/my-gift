@@ -14,6 +14,7 @@
             --pink-glow: rgba(248, 50, 146, 0.7);
             --gold: #ffcc00;
             --gradient-active: linear-gradient(to right, #9133a8, #f83292);
+            --shadow-bg: #050505; /* خلفية المشهد المطلوب */
         }
 
         body, html {
@@ -70,7 +71,7 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
-        /* النجوم الخلفية */
+        /* النجوم الخلفية العامة */
         .star {
             position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%;
             animation: twinkle 1.5s infinite;
@@ -84,55 +85,48 @@
             z-index: 2;
         }
 
-        /* استايل المشهد الجديد (الصورة المرفقة) */
-        .image-scene-container {
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #2c1a10 0%, #000000 80%);
+        /* تصميم المشهد الجديد (محاكاة الصورة) */
+        .shadow-scene {
+            position: relative; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a1310 0%, #050505 100%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative;
         }
 
-        .glowing-heart {
-            font-size: 50px; color: #ff4d4d;
-            filter: drop-shadow(0 0 15px #ff4d4d);
-            margin-bottom: 20px;
-            animation: pulseHeart 2s infinite;
+        .heart-icon {
+            font-size: 45px; margin-bottom: 10px;
+            filter: drop-shadow(0 0 15px rgba(255, 77, 77, 0.6));
+            animation: pulse 1.5s infinite;
         }
-        @keyframes pulseHeart {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        .vertical-line {
+            width: 2px; height: 100px;
+            background: linear-gradient(to bottom, #ffcc00, transparent);
+            margin-bottom: -5px;
         }
 
-        .divider-line {
-            width: 2px; height: 120px;
-            background: linear-gradient(to bottom, #f39c12, transparent);
-            margin-bottom: 5px;
-        }
-
-        .couples-frame {
+        .figures-container {
             display: flex; gap: 20px; align-items: flex-end;
-            margin-bottom: 30px;
+            position: relative; z-index: 2;
         }
 
-        .person-shape {
-            width: 60px; height: 110px; background: #000;
-            border-radius: 30px 30px 5px 5px; position: relative;
+        .figure {
+            width: 60px; height: 120px;
+            display: flex; flex-direction: column; align-items: center;
         }
-        .person-shape::before {
-            content: ''; position: absolute; top: -45px; left: 50%;
-            transform: translateX(-50%); width: 45px; height: 45px;
-            background: #000; border-radius: 50%;
+        .figure-head { width: 35px; height: 35px; background: #000; border-radius: 50%; margin-bottom: 5px; }
+        .figure-body { width: 50px; height: 80px; background: #000; border-radius: 20px 20px 5px 5px; }
+
+        .ground-glow {
+            position: absolute; bottom: 0; width: 150%; height: 300px;
+            background: radial-gradient(ellipse at center, rgba(82, 48, 26, 0.4) 0%, transparent 70%);
+            transform: perspective(500px) rotateX(60deg);
+            z-index: 1;
         }
 
-        .stars-row {
-            display: flex; gap: 15px; margin-bottom: 40px;
-        }
-        .gold-mini-star { color: #d4af37; font-size: 18px; opacity: 0.6; }
-
-        .image-caption {
-            font-family: 'Aref Ruqaa', serif; font-size: 32px; color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        .gold-stars-row {
+            display: flex; gap: 15px; margin-top: 25px; color: rgba(255, 204, 0, 0.4);
+            font-size: 18px;
         }
 
         /* الساعة */
@@ -142,10 +136,29 @@
             box-shadow: 0 0 40px rgba(145, 51, 168, 0.3);
             display: flex; align-items: center; justify-content: center;
         }
+        .pro-clock::after {
+            content: ''; position: absolute; width: 10px; height: 10px;
+            background: var(--gold); border-radius: 50%; z-index: 10;
+        }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 5; }
         .hour { width: 7px; height: 55px; background: #b52a7e; animation: rotateHand 480s linear infinite; }
         .min { width: 5px; height: 80px; background: #f83292; animation: rotateHand 120s linear infinite; }
-        @keyframes rotateHand { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+        
+        .clock-mark {
+            position: absolute; width: 2px; height: 12px;
+            background: #444; top: 10px; left: 50%;
+            transform-origin: 50% 110px;
+        }
+
+        @keyframes rotateHand {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        #start-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
+            z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -187,42 +200,48 @@
     </section>
 
     <section>
-        <div class="scene-container">
-            <div class="light-circle c1"></div>
-            <div class="light-circle c2"></div>
-            <div class="name-capsule">
-                <div class="inner-name" id="sceneName"></div>
+        <div style="position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.05); filter: blur(15px); width: 180px; height: 180px;"></div>
+            <div style="position: relative; padding: 15px 50px; background: rgba(20, 20, 30, 0.6); border-radius: 80px; z-index: 5; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+                <div class="inner-name" id="sceneName" style="font-family: 'Aref Ruqaa', serif; font-size: 45px; color: var(--pink-accent); text-shadow: 0 0 15px var(--pink-glow);"></div>
             </div>
         </div>
         <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">بيحس بأمان...</h2>
     </section>
 
     <section>
-        <div class="image-scene-container">
-            <div class="glowing-heart">❤️</div>
-            <div class="divider-line"></div>
-            <div class="couples-frame">
-                <div class="person-shape"></div>
-                <div class="person-shape"></div>
-            </div>
-            <div class="stars-row">
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-            </div>
-            <div class="image-caption">خليك معايا</div>
-        </div>
-    </section>
-
-    <section>
         <div class="pro-clock">
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(0deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(90deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(180deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(270deg);"></div>
             <div class="hand hour"></div>
             <div class="hand min"></div>
             <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">كأنها أول مرة... ✨</div>
         </div>
         <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">زي الاول مرة</h2>
+    </section>
+
+    <section style="background: var(--shadow-bg);">
+        <div class="shadow-scene">
+            <div class="heart-icon">❤️</div>
+            <div class="vertical-line"></div>
+            <div class="figures-container">
+                <div class="figure">
+                    <div class="figure-head"></div>
+                    <div class="figure-body"></div>
+                </div>
+                <div class="figure">
+                    <div class="figure-head"></div>
+                    <div class="figure-body"></div>
+                </div>
+            </div>
+            <div class="ground-glow"></div>
+            <div class="gold-stars-row">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <h2 style="font-family: 'Aref Ruqaa', serif; font-size: 45px; color: #fff; margin-top: 40px; z-index: 10;">خليك معايا</h2>
+        </div>
     </section>
 
     <section>
