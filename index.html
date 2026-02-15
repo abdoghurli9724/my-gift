@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>غنيلي - تجربة سينمائية</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0b10;
+            --pink-accent: #f83292;
+            --pink-glow: rgba(248, 50, 146, 0.7);
+            --gold: #d4af37;
+            --gradient-active: linear-gradient(to right, #9133a8, #f83292);
+        }
+
+        body, html {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* حاوية صانع الإهداء */
+        .maker-layout {
+            max-width: 420px; margin: auto; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+        }
+
+        .step-card {
+            background: #1a1b26; border-radius: 35px; padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .song-option {
+            background: #222332; border-radius: 20px; padding: 15px;
+            display: flex; align-items: center; margin-bottom: 15px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        }
+        .song-option.selected { border-color: var(--pink-accent); background: rgba(248, 50, 146, 0.1); }
+        .song-img { width: 55px; height: 55px; border-radius: 12px; margin-left: 15px; }
+
+        .main-input {
+            width: 100%; background: rgba(0,0,0,0.5); border: 2px solid var(--pink-accent);
+            border-radius: 20px; padding: 15px; color: white;
+            font-family: 'Aref Ruqaa', serif; font-size: 30px; text-align: center;
+        }
+
+        .btn-action {
+            width: 100%; border: none; padding: 18px; border-radius: 50px;
+            color: white; font-size: 18px; font-weight: bold;
+            margin-top: 25px; background: var(--gradient-active); cursor: pointer;
+        }
+
+        /* واجهة العرض السينمائية */
+        #view-screen { 
+            display: none; height: 100vh; width: 100%; 
+            overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none;
+        }
+        #view-screen::-webkit-scrollbar { display: none; }
+
+        section {
+            height: 100vh; width: 100%; position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            scroll-snap-align: start; text-align: center; overflow: hidden;
+        }
+
+        /* --- تأثير المشهد 1: النجوم اللامعة --- */
+        .star {
+            position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%;
+            filter: blur(1px); animation: twinkle 1.5s infinite ease-in-out;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px white; } }
+
+        .big-name-text {
+            font-family: 'Aref Ruqaa', serif; font-size: 70px;
+            background: linear-gradient(to bottom, #fff, var(--pink-accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            position: relative; z-index: 2;
+        }
+
+        /* --- تأثير المشهد 2: الغيوم والقمر --- */
+        .moon {
+            width: 80px; height: 80px; background: #fffde1; border-radius: 50%;
+            box-shadow: 0 0 40px rgba(255, 253, 225, 0.4);
+            position: absolute; top: 15%; right: 15%;
+        }
+        .cloud {
+            width: 200px; height: 60px; background: rgba(255,255,255,0.05);
+            border-radius: 50px; filter: blur(20px); position: absolute;
+            animation: cloudMove 20s linear infinite;
+        }
+        @keyframes cloudMove { from { transform: translateX(-150%); } to { transform: translateX(150%); } }
+
+        /* --- تأثير المشهد 3: الساعة الاحترافية --- */
+        .pro-clock {
+            width: 200px; height: 200px; border: 8px solid #222; border-radius: 50%;
+            position: relative; box-shadow: 0 0 50px rgba(145, 51, 168, 0.4), inset 0 0 20px #000;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+        }
+        .clock-center {
+            width: 12px; height: 12px; background: #ffcc00; border-radius: 50%;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;
+        }
+        .hand-hour {
+            width: 6px; height: 50px; background: #f83292; position: absolute;
+            bottom: 50%; left: calc(50% - 3px); transform-origin: bottom;
+            border-radius: 10px; animation: rotateClock 12s linear infinite;
+        }
+        .hand-min {
+            width: 4px; height: 75px; background: #ff6a00; position: absolute;
+            bottom: 50%; left: calc(50% - 2px); transform-origin: bottom;
+            border-radius: 10px; animation: rotateClock 2s linear infinite;
+        }
+        @keyframes rotateClock { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* --- تأثير المشهد 4: الأمان (الفقاعة الاحترافية) --- */
+        .safety-bubble {
+            width: 180px; height: 180px; border: 2px solid rgba(0, 191, 255, 0.3);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            position: relative; animation: float 3s infinite ease-in-out;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.1) 0%, transparent 70%);
+        }
+        .safety-bubble::before {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; box-shadow: inset 0 0 20px rgba(255,255,255,0.1);
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- تأثير المشهد 5: خليك معايا --- */
+        .together-img { width: 150px; height: auto; filter: drop-shadow(0 0 10px var(--pink-accent)); }
+
+        /* زر البدء */
+        #start-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
+            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="maker-layout" id="maker-ui">
+    <div class="step-card">
+        <h2 style="text-align: center; color: var(--gold);">غنيلي 🎵</h2>
+        
+        <div id="setup-step">
+            <div class="song-option" onclick="selectSong(this, 'خليك معايا', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">
+                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" class="song-img">
+                <div style="text-align: right;"><strong>خليك معايا</strong><br><small>عمرو دياب</small></div>
+            </div>
+            <div class="song-option" onclick="selectSong(this, 'يا باقة ورد', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3')">
+                <img src="https://i.ibb.co/6yXyX6m/artist.jpg" class="song-img">
+                <div style="text-align: right;"><strong>يا باقة ورد انت</strong><br><small>محمد عبد الجبار</small></div>
+            </div>
+
+            <div id="name-box" style="display: none; margin-top: 20px;">
+                <input type="text" id="nameInput" class="main-input" placeholder="اكتب اسم حلوتك">
+                <button class="btn-action" onclick="generateLink()">إنشاء عالمك الخاص ✨</button>
+            </div>
+        </div>
+
+        <div id="result-step" style="display: none; text-align: center;">
+            <p>تم صنع الإهداء! انسخ الرابط وأرسله:</p>
+            <div id="linkOutput" style="background:#000; padding:15px; border-radius:10px; font-size:10px; word-break:break-all; border:1px solid var(--pink-accent);"></div>
+            <button class="btn-action" onclick="copyLink()">نسخ الرابط 📋</button>
+        </div>
+    </div>
+</div>
+
+<div id="start-overlay" style="display: none;">
+    <div style="font-size: 80px; animation: heartbeat 1.5s infinite;">❤️</div>
+    <h2 id="greetName">إلى حلوتي</h2>
+    <button class="btn-action" style="width: 200px;" onclick="initExperience()">افتح الرسالة 💌</button>
+</div>
+
+<div id="view-screen">
+    <section id="scene1">
+        <div id="stars-container"></div>
+        <h1 class="big-name-text" id="finalName">حلوتي</h1>
+        <p style="color: #ccc; font-size: 18px;">يا حلم عمري...</p>
+    </section>
+
+    <section>
+        <div class="moon"></div>
+        <div class="cloud" style="top: 20%; animation-delay: 0s;"></div>
+        <div class="cloud" style="top: 40%; animation-delay: -5s;"></div>
+        <div class="cloud" style="top: 15%; animation-delay: -10s;"></div>
+        <div style="font-size: 80px; z-index: 5;">💖</div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 40px; color: #fbc2eb;">من زمان في خيالي...</h2>
+    </section>
+
+    <section>
+        <div class="pro-clock">
+            <div class="clock-center"></div>
+            <div class="hand-hour"></div>
+            <div class="hand-min"></div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px;">كأنها أول مرة...</h2>
+        <p style="color: var(--gold);">زي الأول مرة...</p>
+    </section>
+
+    <section>
+        <div class="safety-bubble">
+            <div style="font-size: 70px;">👤</div>
+            <div style="position: absolute; top: -10px; font-size: 30px;">❤️</div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px;">بيحس بأمان</h2>
+    </section>
+
+    <section>
+        <div style="font-size: 100px; margin-bottom: 20px;">👩‍❤️‍👨</div>
+        <h2 class="big-name-text" style="font-size: 50px;">خليك معايا</h2>
+        <p style="color: #666; font-size: 12px; margin-top: 50px;">برمجة وتصميم حسين علي</p>
+    </section>
+</div>
+
+<audio id="player" loop></audio>
+
+<script>
+    let selectedSong = "";
+    let songUrl = "";
+
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('to')) {
+            document.getElementById('maker-ui').style.display = 'none';
+            document.getElementById('start-overlay').style.display = 'flex';
+            document.getElementById('view-screen').style.display = 'block';
+            document.getElementById('greetName').innerText = "إلى " + decodeURIComponent(params.get('to'));
+            document.getElementById('finalName').innerText = decodeURIComponent(params.get('to'));
+            songUrl = decodeURIComponent(params.get('m'));
+            createStars();
+        }
+    };
+
+    function createStars() {
+        const container = document.getElementById('stars-container');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(star);
+        }
+    }
+
+    function selectSong(el, name, url) {
+        document.querySelectorAll('.song-option').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedSong = name;
+        songUrl = url;
+        document.getElementById('name-box').style.display = 'block';
+    }
+
+    function generateLink() {
+        const name = document.getElementById('nameInput').value;
+        if (!name) return alert("الرجاء كتابة الاسم");
+        const link = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name) + "&m=" + encodeURIComponent(songUrl);
+        document.getElementById('setup-step').style.display = 'none';
+        document.getElementById('result-step').style.display = 'block';
+        document.getElementById('linkOutput').innerText = link;
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(document.getElementById('linkOutput').innerText);
+        alert("تم نسخ الرابط! أرسله الآن.");
+    }
+
+    function initExperience() {
+        document.getElementById('start-overlay').style.display = 'none';
+        const audio = document.getElementById('player');
+        audio.src = songUrl;
+        audio.play();
+
+        let current = 0;
+        const total = document.querySelectorAll('section').length;
+        
+        setInterval(() => {
+            current++;
+            if (current >= total) current = 0;
+            document.getElementById('view-screen').scrollTo({
+                top: current * window.innerHeight,
+                behavior: 'smooth'
+            });
+        }, 5000);
+    }
+</script>
+
+</body>
+</html>
