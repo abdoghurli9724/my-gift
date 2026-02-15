@@ -70,6 +70,7 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
+        /* النجوم */
         .star {
             position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%;
             animation: twinkle 1.5s infinite;
@@ -83,64 +84,76 @@
             z-index: 2;
         }
 
-        /* مشهد الساعة الاحترافي */
+        /* تصميم مشهد الإطار والنجوم الذهبية */
+        .scene-container {
+            position: relative; width: 300px; height: 300px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .light-circle {
+            position: absolute; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            filter: blur(15px);
+        }
+        .c1 { width: 150px; height: 150px; top: 10%; left: 10%; }
+        .c2 { width: 180px; height: 180px; bottom: 10%; right: 5%; }
+
+        .name-capsule {
+            position: relative; padding: 15px 50px;
+            background: rgba(20, 20, 30, 0.6);
+            border-radius: 80px; z-index: 5;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .inner-name {
+            font-family: 'Aref Ruqaa', serif; font-size: 45px;
+            color: var(--pink-accent); text-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        .gold-star {
+            position: absolute; color: var(--gold); font-size: 20px;
+            animation: floatUpDown 3s infinite ease-in-out;
+            z-index: 6;
+        }
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-15px); opacity: 1; }
+        }
+
+        /* الساعة */
         .pro-clock {
             width: 240px; height: 240px; border: 4px solid #2a2235; border-radius: 50%;
             position: relative; background: radial-gradient(circle, #1a1025 0%, #0a0b10 100%);
             box-shadow: 0 0 40px rgba(145, 51, 168, 0.3);
             display: flex; align-items: center; justify-content: center;
         }
+        .pro-clock::after {
+            content: ''; position: absolute; width: 10px; height: 10px;
+            background: var(--gold); border-radius: 50%; z-index: 10;
+        }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 5; }
         .hour { width: 7px; height: 55px; background: #b52a7e; animation: rotateHand 480s linear infinite; }
         .min { width: 5px; height: 80px; background: #f83292; animation: rotateHand 120s linear infinite; }
         
+        .clock-mark {
+            position: absolute; width: 2px; height: 12px;
+            background: #444; top: 10px; left: 50%;
+            transform-origin: 50% 110px;
+        }
+
         @keyframes rotateHand {
             from { transform: translateX(-50%) rotate(0deg); }
             to { transform: translateX(-50%) rotate(360deg); }
         }
 
-        /* الانتقالات الجديدة المستبدلة */
-        
-        /* المشهد 4: بطاقة الرسالة العائمة */
-        .message-card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            padding: 30px;
-            width: 85%;
-            max-width: 350px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
-            animation: floatCard 3s infinite ease-in-out;
-        }
-        @keyframes floatCard {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        .msg-title { color: var(--gold); font-size: 14px; margin-bottom: 10px; font-weight: bold; }
-        .msg-content { font-size: 22px; color: #fff; line-height: 1.5; font-family: 'Aref Ruqaa'; }
-
-        /* المشهد 5: شبكة القلوب المتطايرة */
-        .final-overlay {
+        /* الفقاعة العائمة (التي كانت محذوفة) */
+        .bubble-scene {
+            width: 160px; height: 160px; border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, rgba(248, 50, 146, 0.15), transparent);
+            animation: bubbleFloat 4s infinite ease-in-out;
             position: relative;
-            width: 100%;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        .heart-fly {
-            position: absolute;
-            color: var(--pink-accent);
-            animation: flyUp 4s infinite linear;
-            opacity: 0;
-            font-size: 25px;
-        }
-        @keyframes flyUp {
-            0% { transform: translateY(100px) scale(0); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
-        }
+        @keyframes bubbleFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-25px) scale(1.05); } }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -152,7 +165,7 @@
 
 <div class="maker-layout" id="maker-ui">
     <div class="step-card">
-        <h2 style="text-align: center; color: var(--gold); font-family: 'Aref Ruqaa';">صانع الإهداءات 🎵</h2>
+        <h2 style="text-align: center; color: var(--gold); font-family: 'Aref Ruqaa';">غنيلي 🎵</h2>
         
         <div id="setup-step">
             <div class="song-option" id="default-song" onclick="selectSong(this, 'خليك معايا', 'https://j.top4top.io/m_369843dq30.mp3')">
@@ -160,23 +173,23 @@
                 <div style="text-align: right;"><strong>خليك معايا</strong><br><small>عمرو دياب</small></div>
             </div>
             <div id="name-box" style="display: none; margin-top: 20px;">
-                <input type="text" id="nameInput" class="main-input" placeholder="اكتب الاسم هنا">
-                <button class="btn-action" onclick="generateLink()">إنشاء الرابط السحري ✨</button>
+                <input type="text" id="nameInput" class="main-input" placeholder="اسم المستلم">
+                <button class="btn-action" onclick="generateLink()">إنشاء الرابط ✨</button>
             </div>
         </div>
 
         <div id="result-step" style="display: none; text-align: center;">
-            <p>تم إنشاء الإهداء بنجاح!</p>
+            <p>جاهز للإرسال!</p>
             <div id="linkOutput" style="background:#000; padding:15px; border-radius:10px; font-size:10px; word-break:break-all; border:1px solid var(--pink-accent); margin-bottom: 15px;"></div>
-            <button class="btn-action" onclick="copyLink()">نسخ الرابط لإرساله 📋</button>
+            <button class="btn-action" onclick="copyLink()">نسخ الرابط 📋</button>
         </div>
     </div>
 </div>
 
 <div id="start-overlay" style="display: none;">
-    <div style="font-size: 80px; animation: pulse 2s infinite;">💝</div>
-    <h2 id="greetName" style="font-family: 'Aref Ruqaa'; margin-bottom: 20px;"></h2>
-    <button class="btn-action" style="width: 200px;" onclick="initExperience()">افتح الإهداء 🎵</button>
+    <div style="font-size: 80px;">💖</div>
+    <h2 id="greetName" style="font-family: 'Aref Ruqaa';"></h2>
+    <button class="btn-action" style="width: 200px;" onclick="initExperience()">ابدأ الإهداء 🎵</button>
 </div>
 
 <div id="view-screen">
@@ -187,40 +200,44 @@
     </section>
 
     <section>
-        <div class="name-capsule">
-            <div class="inner-name" id="sceneName"></div>
+        <div class="scene-container">
+            <div class="light-circle c1"></div>
+            <div class="light-circle c2"></div>
+            <div class="gold-star" style="top:20%; left:10%;">✦</div>
+            <div class="gold-star" style="top:40%; right:5%;">✧</div>
+            <div class="gold-star" style="bottom:15%; left:20%;">✦</div>
+            <div class="name-capsule">
+                <div class="inner-name" id="sceneName"></div>
+            </div>
         </div>
         <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">بيحس بأمان...</h2>
     </section>
 
     <section>
         <div class="pro-clock">
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(0deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(90deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(180deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(270deg);"></div>
+
             <div class="hand hour"></div>
             <div class="hand min"></div>
+            <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">كأنها أول مرة... ✨</div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">كأنها أول مرة</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">زي الاول مرة</h2>
     </section>
 
     <section>
-        <div class="message-card">
-            <div class="msg-title">رسالة خاصة 💌</div>
-            <div class="msg-content">
-                "خليك معايا يا <span class="dynamic-name" style="color:var(--pink-accent)"></span>.. الدنيا مابتضحكش ليا غير بوجودك."
-            </div>
+        <div class="bubble-scene">
+            <div style="font-size: 65px;">👤❤️</div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 30px; margin-top: 35px; color: #fff;">مهما كان...</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px;">خليك معايا ياحبيبي مهما كان</h2>
     </section>
 
     <section>
-        <div class="final-overlay">
-            <div class="heart-fly" style="left:10%; animation-delay: 0s;">❤️</div>
-            <div class="heart-fly" style="left:30%; animation-delay: 1s;">💖</div>
-            <div class="heart-fly" style="left:70%; animation-delay: 0.5s;">💕</div>
-            <div class="heart-fly" style="left:90%; animation-delay: 1.5s;">💗</div>
-            <div style="font-size: 100px; z-index: 10;">💏</div>
-        </div>
-        <h2 class="big-name-text" style="font-size: 40px;">أنت الـعـمـر</h2>
-        <p style="font-size: 12px; color: #666; margin-top: 40px;">تم التصميم بكل حب</p>
+        <div style="font-size: 80px;">💑</div>
+        <h2 class="big-name-text" style="font-size: 38px; padding: 0 15px;">ياحلم عمري يلي فخيالي من زمان...</h2>
+        <p style="font-size: 12px; color: #555; margin-top: 50px;">تصميم عبدو غرلي</p>
     </section>
 </div>
 
@@ -247,7 +264,7 @@
 
     function copyLink() {
         navigator.clipboard.writeText(document.getElementById('linkOutput').innerText);
-        alert("تم نسخ الرابط! أرسله لمن تحب.");
+        alert("تم نسخ الرابط!");
     }
 
     window.onload = function() {
@@ -257,13 +274,9 @@
             document.getElementById('maker-ui').style.display = 'none';
             document.getElementById('start-overlay').style.display = 'flex';
             document.getElementById('view-screen').style.display = 'block';
-            
-            // تعبئة الأسماء في كل المشاهد
-            document.getElementById('greetName').innerText = "إهداء إلى " + name;
+            document.getElementById('greetName').innerText = "إلى " + name;
             document.getElementById('finalName').innerText = name;
             document.getElementById('sceneName').innerText = name;
-            document.querySelectorAll('.dynamic-name').forEach(el => el.innerText = name);
-
             songUrl = decodeURIComponent(params.get('m')) || "https://j.top4top.io/m_369843dq30.mp3";
             
             const box = document.getElementById('stars-box');
@@ -281,9 +294,7 @@
         document.getElementById('start-overlay').style.display = 'none';
         const audio = document.getElementById('player');
         audio.src = songUrl;
-        audio.play().catch(() => {
-            console.log("Audio play failed - user interaction needed");
-        });
+        audio.play();
 
         let current = 0;
         const sections = document.querySelectorAll('section');
@@ -293,7 +304,7 @@
                 top: current * window.innerHeight,
                 behavior: 'smooth'
             });
-        }, 6000); 
+        }, 6000); // سرعة التمرير 6 ثواني
     }
 </script>
 </body>
