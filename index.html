@@ -175,20 +175,70 @@
     100% { transform: scale(1.1); box-shadow: 0 0 60px var(--pink-accent); }
 }
 
-/* تأثير الستارة المضيئة للمشهد الختامي */
+/* تصميم الخاتمة الاحترافي الجديد */
 .final-shimmer {
-    background: linear-gradient(-45deg, #0a0b10, #1a1b26, #2d1b33, #0a0b10);
-    background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite;
+    background: radial-gradient(circle at center, #1a1b26 0%, #0a0b10 100%);
     width: 100%; height: 100%;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
 }
 
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+.final-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(248, 50, 146, 0.3);
+    padding: 40px 20px;
+    border-radius: 40px;
+    width: 85%;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 20px rgba(248, 50, 146, 0.1);
+    animation: cardEntrance 1.5s ease-out;
 }
+
+@keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.thank-you-text {
+    font-family: 'Aref Ruqaa', serif;
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.signature {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 13px;
+    color: #888;
+}
+
+.signature b {
+    color: var(--pink-accent);
+    text-shadow: 0 0 10px var(--pink-glow);
+}
+
+/* حركة التوهج الخلفي */
+.glow-orb {
+    position: absolute;
+    width: 300px; height: 300px;
+    background: var(--pink-glow);
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: orbit 10s infinite linear;
+}
+
+@keyframes orbit {
+    0% { transform: translate(-50%, -50%); }
+    50% { transform: translate(20%, 20%); }
+    100% { transform: translate(-50%, -50%); }
+}
+
 
 /* جزيئات القلوب المتطايرة */
 .floating-heart {
@@ -255,7 +305,7 @@
                 <div class="inner-name" id="sceneName"></div>
             </div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">بيحس بأمان...</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">بيحس بأمان</h2>
     </section>
 
     <section>
@@ -276,25 +326,36 @@
             <div class="floating-heart" style="left:20%; animation-delay: 0s;">💋</div>
             <div class="floating-heart" style="right:20%; animation-delay: 1s;">💖</div>
             <div class="floating-heart" style="top:10%; animation-delay: 2s;">✨</div>
-            <div class="floating-heart" style="top:10%; animation-delay: 2s;">🫂</div>
+            <div class="floating-heart" style="top:10%; animation-delay: 3s;">♥️</div>
         </div>
         <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px; text-shadow: 0 0 10px var(--pink-glow);">خليك معايا ياحبيبي مهما كان</h2>
     </section>
 
     <section class="final-shimmer">
-        <div style="position: relative;">
-            <div style="font-size: 100px; z-index: 10; position: relative;">🫂💗</div>
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: var(--pink-accent); filter: blur(80px); opacity: 0.5;"></div>
+        <div class="glow-orb"></div>
+
+        <div class="final-card">
+            <div class="thank-you-text">إهداء من القلب</div>
+            
+            <div style="font-size: 50px; margin: 15px 0;">✨❤️✨</div>
+            
+            <h2 class="big-name-text" style="font-size: 45px; margin: 10px 0;">يا حلم عمري</h2>
+            
+            <p style="font-family: 'Cairo'; color: #eee; line-height: 1.6; font-size: 16px;">
+                "عن ألف قلب اكتفيت بقلبك،<br>وعن ألف حب اخترتك أنتِ."
+            </p>
+
+            <div class="signature">
+                صُنع بكل حُب بواسطة <br>
+                <b>عبدو غرلي</b>
+            </div>
         </div>
         
-        <h2 class="big-name-text" style="font-size: 42px; margin-top: 20px; text-align: center;">يا حلم عمري</h2>
-        <p style="font-family: 'Cairo'; color: var(--gold); letter-spacing: 2px; font-weight: bold;">عن ألف قلب اكتفيت بقلبك</p>
-        
-        <div style="margin-top: 50px; opacity: 0.6; font-size: 14px;">
-            <span style="color: #eee;">بواسطة</span> 
-            <span style="color: var(--pink-accent); font-weight: bold;">عبدو غرلي</span>
+        <div style="margin-top: 30px; font-size: 12px; color: var(--pink-accent); opacity: 0.7; animation: pulse 2s infinite;">
+            أنتِ كل الحكاية.. ✨
         </div>
     </section>
+
 </div>
 
 
