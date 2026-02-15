@@ -159,6 +159,51 @@
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
             z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        /* تأثير النبض الكوني للمشهد قبل الأخير */
+.cosmic-glow {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, var(--pink-accent) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulseGlow 3s infinite alternate;
+    display: flex; align-items: center; justify-content: center;
+}
+
+@keyframes pulseGlow {
+    0% { transform: scale(0.9); box-shadow: 0 0 20px var(--pink-glow); }
+    100% { transform: scale(1.1); box-shadow: 0 0 60px var(--pink-accent); }
+}
+
+/* تأثير الستارة المضيئة للمشهد الختامي */
+.final-shimmer {
+    background: linear-gradient(-45deg, #0a0b10, #1a1b26, #2d1b33, #0a0b10);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* جزيئات القلوب المتطايرة */
+.floating-heart {
+    position: absolute;
+    color: var(--pink-accent);
+    opacity: 0;
+    animation: flyUp 4s linear infinite;
+}
+
+@keyframes flyUp {
+    0% { transform: translateY(100px) scale(0); opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
+}
+
     </style>
 </head>
 <body>
@@ -225,20 +270,31 @@
             <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">كأنها أول مرة... ✨</div>
         </div>
         <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">زي الاول مرة</h2>
-    </section>
-
     <section>
-        <div class="bubble-scene">
-            <div style="font-size: 65px;">👤❤️</div>
+        <div class="cosmic-glow">
+            <div style="font-size: 80px; filter: drop-shadow(0 0 10px white);">👤</div>
+            <div class="floating-heart" style="left:20%; animation-delay: 0s;">❤️</div>
+            <div class="floating-heart" style="right:20%; animation-delay: 1s;">💖</div>
+            <div class="floating-heart" style="top:10%; animation-delay: 2s;">✨</div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px;">خليك معايا ياحبيبي مهما كان</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px; text-shadow: 0 0 10px var(--pink-glow);">خليك معايا ياحبيبي مهما كان</h2>
     </section>
 
-    <section>
-        <div style="font-size: 80px;">💑</div>
-        <h2 class="big-name-text" style="font-size: 38px; padding: 0 15px;">ياحلم عمري يلي فخيالي من زمان...</h2>
-        <p style="font-size: 12px; color: #555; margin-top: 50px;">تصميم عبدو غرلي</p>
+    <section class="final-shimmer">
+        <div style="position: relative;">
+            <div style="font-size: 100px; z-index: 10; position: relative;">💑</div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: var(--pink-accent); filter: blur(80px); opacity: 0.5;"></div>
+        </div>
+        
+        <h2 class="big-name-text" style="font-size: 42px; margin-top: 20px; text-align: center;">يا حلم عمري</h2>
+        <p style="font-family: 'Cairo'; color: var(--gold); letter-spacing: 2px; font-weight: bold;">إهداء خاص من القلب</p>
+        
+        <div style="margin-top: 50px; opacity: 0.6; font-size: 14px;">
+            <span style="color: #eee;">بواسطة</span> 
+            <span style="color: var(--pink-accent); font-weight: bold;">عبدو غرلي</span>
+        </div>
     </section>
+
 </div>
 
 <audio id="player" loop></audio>
