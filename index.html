@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>غنيلي - خليك معايا</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg-dark: #0a0b10;
             --pink-accent: #f83292;
-            --pink-glow: rgba(248, 50, 146, 0.7);
-            --gold: #d4af37;
+            --pink-glow: rgba(248, 50, 146, 0.4);
+            --gold: #ffcc00;
             --gradient-active: linear-gradient(to right, #9133a8, #f83292);
         }
 
@@ -42,12 +42,12 @@
             cursor: pointer; border: 2px solid transparent; transition: 0.3s;
         }
         .song-option.selected { border-color: var(--pink-accent); background: rgba(248, 50, 146, 0.1); }
-        .Song-img { width: 55px; height: 55px; border-radius: 12px; margin-left: 15px; }
+        .song-img { width: 55px; height: 55px; border-radius: 12px; margin-left: 15px; }
 
         .main-input {
             width: 100%; background: rgba(0,0,0,0.5); border: 2px solid var(--pink-accent);
             border-radius: 20px; padding: 15px; color: white;
-            font-family: 'Aref Ruqaa', serif; font-size: 30px; text-align: center; margin-bottom: 15px;
+            font-family: 'Aref Ruqaa', serif; font-size: 30px; text-align: center; margin-bottom: 15px; box-sizing: border-box;
         }
 
         .btn-action {
@@ -84,32 +84,64 @@
             z-index: 2;
         }
 
-        /* مشهد 2: الغيوم والقمر */
+        /* مشهد 2: القمر */
         .moon {
             width: 70px; height: 70px; background: #fffde1; border-radius: 50%;
             box-shadow: 0 0 30px white; position: absolute; top: 10%; right: 15%;
         }
-        .cloud-svg { position: absolute; filter: blur(8px); opacity: 0.4; animation: moveCloud 25s linear infinite; }
-        @keyframes moveCloud { from { left: -20%; } to { left: 110%; } }
 
-        /* مشهد 3: الساعة الاحترافية */
+        /* --- تصميم الساعة المطابق للصورة تماماً --- */
         .pro-clock {
-            width: 180px; height: 180px; border: 6px solid #222; border-radius: 50%;
-            position: relative; background: #000; box-shadow: 0 0 40px var(--pink-glow);
+            width: 260px; height: 260px; 
+            border: 4px solid #2a2235; border-radius: 50%;
+            position: relative; 
+            background: radial-gradient(circle, #1a1025 0%, #0a0b10 100%);
+            box-shadow: 0 0 40px rgba(145, 51, 168, 0.15);
+            display: flex; align-items: center; justify-content: center;
         }
-        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; border-radius: 5px; }
-        .hour { width: 4px; height: 45px; background: #f83292; animation: rotateHand 10s linear infinite; }
-        .min { width: 3px; height: 65px; background: #ffcc00; animation: rotateHand 2s linear infinite; }
-        @keyframes rotateHand { from { transform: rotate(0deg) translateX(-50%); } to { transform: rotate(360deg) translateX(-50%); } }
 
-        /* مشهد 4: الفقاعة */
-        .bubble {
-            width: 150px; height: 150px; border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, rgba(248, 50, 146, 0.1), transparent);
-            animation: float 4s infinite ease-in-out;
+        /* النقطة المركزية الصفراء */
+        .pro-clock::after {
+            content: ''; position: absolute; width: 10px; height: 10px;
+            background: var(--gold); border-radius: 50%; z-index: 10;
+            box-shadow: 0 0 8px var(--gold);
         }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+        .hand {
+            position: absolute; bottom: 50%; left: 50%;
+            transform-origin: bottom center; border-radius: 10px; z-index: 5;
+        }
+
+        /* عقرب الساعات (الوردي الغامق) */
+        .hour {
+            width: 7px; height: 65px; background: #b52a7e;
+            animation: rotateHand 240s linear infinite; /* بطيئة جداً */
+        }
+
+        /* عقرب الدقائق (الفوشيا الفاتح) */
+        .min {
+            width: 5px; height: 95px; background: #f83292;
+            animation: rotateHand 40s linear infinite; /* أسرع قليلاً لكنها هادئة */
+        }
+
+        /* الشرطات الداخلية */
+        .clock-mark {
+            position: absolute; width: 2px; height: 12px;
+            background: #444; top: 10px; left: 50%;
+            transform-origin: 50% 120px;
+        }
+
+        /* النص الصغير داخل الساعة */
+        .inner-text {
+            position: absolute; bottom: 45px; 
+            color: #9133a8; font-family: 'Aref Ruqaa';
+            font-size: 16px; opacity: 0.9;
+        }
+
+        @keyframes rotateHand {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg); }
+        }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -121,15 +153,13 @@
 
 <div class="maker-layout" id="maker-ui">
     <div class="step-card">
-        <h2 style="text-align: center; color: var(--gold);">غنيلي 🎵</h2>
+        <h2 style="text-align: center; color: var(--gold); font-family: 'Aref Ruqaa';">غنيلي 🎵</h2>
         
         <div id="setup-step">
-            <div class="song-option" id="default-song" onclick="selectSong(this, 'خليك معايا', 'رابط_الأغنية_المرفوعة_هنا')">
+            <div class="song-option" id="default-song" onclick="selectSong(this, 'خليك معايا', 'https://j.top4top.io/m_369843dq30.mp3')">
                 <img src="https://i.ibb.co/VWV0pY6/amr.jpg" class="song-img">
                 <div style="text-align: right;"><strong>خليك معايا</strong><br><small>عمرو دياب</small></div>
             </div>
-
-            <p style="font-size: 12px; color: #8a8b9c; text-align: center;">(ملاحظة: استبدل 'رابط_الأغنية_المرفوعة_هنا' برابط الأغنية الحقيقي في الكود)</p>
 
             <div id="name-box" style="display: none; margin-top: 20px;">
                 <input type="text" id="nameInput" class="main-input" placeholder="اسم المستلم">
@@ -146,43 +176,50 @@
 </div>
 
 <div id="start-overlay" style="display: none;">
-    <div style="font-size: 80px;">💖</div>
-    <h2 id="greetName"></h2>
-    <button class="btn-action" style="width: 200px;" onclick="initExperience()">ابدأ الإهداء 🎵</button>
+    <div style="font-size: 80px; margin-bottom: 20px;">💖</div>
+    <h2 id="greetName" style="font-family: 'Aref Ruqaa';"></h2>
+    <button class="btn-action" style="width: 220px;" onclick="initExperience()">فتح الإهداء 🎵</button>
 </div>
 
 <div id="view-screen">
     <section>
         <div id="stars-box"></div>
         <h1 class="big-name-text" id="finalName"></h1>
-        <p style="color: var(--gold);">يا حلم عمري...</p>
-    </section>
-
-    <section>
-        <div class="moon"></div>
-        <div class="cloud-svg" style="top:20%">☁️</div>
-        <div class="cloud-svg" style="top:40%; animation-delay: -5s;">☁️</div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px;">زي لاول مرة بيحس بأمان...</h2>
+        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 24px;">يا حلم عمري...</p>
     </section>
 
     <section>
         <div class="pro-clock">
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(0deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(30deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(60deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(90deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(120deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(150deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(180deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(210deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(240deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(270deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(300deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(330deg);"></div>
+
             <div class="hand hour"></div>
             <div class="hand min"></div>
-            <div style="position:absolute; top:50%; left:50%; width:10px; height:10px; background:#fff; border-radius:50%; transform:translate(-50%,-50%);"></div>
+            
+            <div class="inner-text">كأنها أول مرة... ✨</div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px;">خليك معايا...</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 40px;">زي الاول مرة</h2>
     </section>
 
     <section>
-        <div class="bubble"><div style="font-size: 50px;">👤❤️</div></div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px;">يحبيبي مهما كان...</h2>
+        <div class="moon"></div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; padding: 0 20px;">بيحس بأمان... خليك معايا</h2>
     </section>
 
     <section>
         <div style="font-size: 80px;">💑</div>
-        <h2 class="big-name-text" style="font-size: 40px;">ياحلم عمري يلي فخيالي من زماااان...</h2>
-        <p style="font-size: 12px; color: #555; margin-top: 40px;">تصميم عبدو غرلي</p>
+        <h2 class="big-name-text" style="font-size: 35px; padding: 0 20px;">ياحلم عمري يلي فخيالي من زمان</h2>
+        <p style="font-size: 14px; color: #555; margin-top: 50px;">صنع بكل حب ❤️</p>
     </section>
 </div>
 
@@ -194,8 +231,7 @@
     function selectSong(el, name, url) {
         document.querySelectorAll('.song-option').forEach(d => d.classList.remove('selected'));
         el.classList.add('selected');
-        // هنا يتم تحديد الرابط - يمكنك تغييره يدوياً في الكود
-        songUrl = "https://j.top4top.io/m_369843dq30.mp3"; 
+        songUrl = url; 
         document.getElementById('name-box').style.display = 'block';
     }
 
@@ -209,8 +245,8 @@
     }
 
     function copyLink() {
-        navigator.clipboard.writeText(document.getElementById('linkOutput').innerText);
-        alert("تم نسخ الرابط!");
+        const text = document.getElementById('linkOutput').innerText;
+        navigator.clipboard.writeText(text).then(() => alert("تم نسخ الرابط!"));
     }
 
     window.onload = function() {
@@ -221,11 +257,10 @@
             document.getElementById('view-screen').style.display = 'block';
             document.getElementById('greetName').innerText = "إلى " + decodeURIComponent(params.get('to'));
             document.getElementById('finalName').innerText = decodeURIComponent(params.get('to'));
-            songUrl = decodeURIComponent(params.get('m'));
+            songUrl = decodeURIComponent(params.get('m')) || "https://j.top4top.io/m_369843dq30.mp3";
             
-            // إضافة النجوم
             const box = document.getElementById('stars-box');
-            for(let i=0; i<40; i++) {
+            for(let i=0; i<50; i++) {
                 let s = document.createElement('div');
                 s.className = 'star';
                 s.style.top = Math.random()*100+'%';
@@ -239,7 +274,7 @@
         document.getElementById('start-overlay').style.display = 'none';
         const audio = document.getElementById('player');
         audio.src = songUrl;
-        audio.play();
+        audio.play().catch(e => console.log("Audio play failed"));
 
         let current = 0;
         const sections = document.querySelectorAll('section');
