@@ -25,6 +25,38 @@
             height: 100%;
         }
 
+        /* حاوية صانع الإهداء */
+        .maker-layout {
+            max-width: 420px; margin: auto; padding: 20px;
+            display: flex; flex-direction: column; justify-content: center; min-height: 100vh;
+        }
+
+        .step-card {
+            background: #1a1b26; border-radius: 35px; padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .song-option {
+            background: #222332; border-radius: 20px; padding: 15px;
+            display: flex; align-items: center; margin-bottom: 15px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        }
+        .song-option.selected { border-color: var(--pink-accent); background: rgba(248, 50, 146, 0.1); }
+        .song-img { width: 55px; height: 55px; border-radius: 12px; margin-left: 15px; }
+
+        .main-input {
+            width: 100%; background: rgba(0,0,0,0.5); border: 2px solid var(--pink-accent);
+            border-radius: 20px; padding: 15px; color: white;
+            font-family: 'Aref Ruqaa', serif; font-size: 30px; text-align: center; margin-bottom: 15px; box-sizing: border-box;
+        }
+
+        .btn-action {
+            width: 100%; border: none; padding: 18px; border-radius: 50px;
+            color: white; font-size: 18px; font-weight: bold;
+            background: var(--gradient-active); cursor: pointer;
+            box-shadow: 0 5px 15px var(--pink-glow);
+        }
+
         /* واجهة العرض السينمائية */
         #view-screen { 
             display: none; height: 100vh; width: 100%; 
@@ -38,81 +70,82 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
-        /* النجوم الخلفية العامة */
+        /* النجوم الخلفية */
         .star {
             position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%;
             animation: twinkle 1.5s infinite;
         }
         @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; transform: scale(1.2); } }
 
-        /* --- مشهد الشخصين والقلب (مطابق للصورة تماماً) --- */
-        .together-scene {
-            position: relative; width: 100%; height: 400px;
-            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+        .big-name-text {
+            font-family: 'Aref Ruqaa', serif; font-size: 60px;
+            background: linear-gradient(to bottom, #fff, var(--pink-accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            z-index: 2;
         }
 
-        /* التوهج الخلفي */
-        .glow-bg {
-            position: absolute; bottom: 0; width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(255, 140, 0, 0.15) 0%, transparent 70%);
-            z-index: 1;
+        /* استايل المشهد الجديد (الصورة المرفقة) */
+        .image-scene-container {
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #2c1a10 0%, #000000 80%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: relative;
         }
 
-        /* القلب المتوهج */
-        .heart-glow {
-            font-size: 60px; color: #ff4d4d;
-            filter: drop-shadow(0 0 20px rgba(255, 77, 77, 0.8));
-            animation: pulse 1.5s infinite;
-            margin-bottom: 20px; z-index: 5;
+        .glowing-heart {
+            font-size: 50px; color: #ff4d4d;
+            filter: drop-shadow(0 0 15px #ff4d4d);
+            margin-bottom: 20px;
+            animation: pulseHeart 2s infinite;
         }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-
-        /* الشخصين والخط الفاصل */
-        .figures-box {
-            position: relative; display: flex; align-items: flex-end; gap: 40px; z-index: 4;
+        @keyframes pulseHeart {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
-        .person-icon { width: 60px; height: 120px; background: #000; border-radius: 30px 30px 10px 10px; position: relative; }
-        .person-icon::before { content: ''; position: absolute; top: -45px; left: 5px; width: 50px; height: 50px; background: #000; border-radius: 50%; }
 
         .divider-line {
-            width: 3px; height: 180px;
-            background: linear-gradient(to top, transparent, var(--gold), transparent);
-            box-shadow: 0 0 15px var(--gold);
+            width: 2px; height: 120px;
+            background: linear-gradient(to bottom, #f39c12, transparent);
+            margin-bottom: 5px;
         }
 
-        /* النجوم الذهبية في المشهد */
-        .stars-row { display: flex; gap: 25px; margin-top: 40px; z-index: 5; }
-        .small-gold-star { color: var(--gold); font-size: 18px; opacity: 0.8; }
-
-        /* --- مشهد الاسم المحدث (الكبسولة) --- */
-        .name-capsule {
-            position: relative; padding: 15px 50px; background: rgba(20, 20, 30, 0.6);
-            border-radius: 80px; z-index: 5; box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        .couples-frame {
+            display: flex; gap: 20px; align-items: flex-end;
+            margin-bottom: 30px;
         }
-        .inner-name { font-family: 'Aref Ruqaa', serif; font-size: 45px; color: var(--pink-accent); text-shadow: 0 0 15px var(--pink-glow); }
 
-        /* --- الساعة --- */
+        .person-shape {
+            width: 60px; height: 110px; background: #000;
+            border-radius: 30px 30px 5px 5px; position: relative;
+        }
+        .person-shape::before {
+            content: ''; position: absolute; top: -45px; left: 50%;
+            transform: translateX(-50%); width: 45px; height: 45px;
+            background: #000; border-radius: 50%;
+        }
+
+        .stars-row {
+            display: flex; gap: 15px; margin-bottom: 40px;
+        }
+        .gold-mini-star { color: #d4af37; font-size: 18px; opacity: 0.6; }
+
+        .image-caption {
+            font-family: 'Aref Ruqaa', serif; font-size: 32px; color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        /* الساعة */
         .pro-clock {
             width: 240px; height: 240px; border: 4px solid #2a2235; border-radius: 50%;
             position: relative; background: radial-gradient(circle, #1a1025 0%, #0a0b10 100%);
             box-shadow: 0 0 40px rgba(145, 51, 168, 0.3);
             display: flex; align-items: center; justify-content: center;
         }
-        .pro-clock::after { content: ''; position: absolute; width: 10px; height: 10px; background: var(--gold); border-radius: 50%; z-index: 10; }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 5; }
         .hour { width: 7px; height: 55px; background: #b52a7e; animation: rotateHand 480s linear infinite; }
         .min { width: 5px; height: 80px; background: #f83292; animation: rotateHand 120s linear infinite; }
-        
-        .clock-mark { position: absolute; width: 2px; height: 12px; background: #444; top: 10px; left: 50%; transform-origin: 50% 110px; }
-
         @keyframes rotateHand { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
-
-        /* صانع الإهداء */
-        .maker-layout { max-width: 420px; margin: auto; padding: 20px; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; }
-        .step-card { background: #1a1b26; border-radius: 35px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
-        .btn-action { width: 100%; border: none; padding: 18px; border-radius: 50px; color: white; font-size: 18px; font-weight: bold; background: var(--gradient-active); cursor: pointer; }
-
-        #start-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -120,14 +153,18 @@
 <div class="maker-layout" id="maker-ui">
     <div class="step-card">
         <h2 style="text-align: center; color: var(--gold); font-family: 'Aref Ruqaa';">غنيلي 🎵</h2>
+        
         <div id="setup-step">
-            <div style="background: #222332; border-radius: 20px; padding: 15px; display: flex; align-items: center; margin-bottom: 15px; border: 2px solid var(--pink-accent);">
-                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" style="width: 55px; height: 55px; border-radius: 12px; margin-left: 15px;">
+            <div class="song-option" id="default-song" onclick="selectSong(this, 'خليك معايا', 'https://j.top4top.io/m_369843dq30.mp3')">
+                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" class="song-img">
                 <div style="text-align: right;"><strong>خليك معايا</strong><br><small>عمرو دياب</small></div>
             </div>
-            <input type="text" id="nameInput" style="width: 100%; background: rgba(0,0,0,0.5); border: 2px solid var(--pink-accent); border-radius: 20px; padding: 15px; color: white; font-family: 'Aref Ruqaa'; font-size: 30px; text-align: center; margin-bottom: 15px; box-sizing: border-box;" placeholder="اسم المستلم">
-            <button class="btn-action" onclick="generateLink()">إنشاء الرابط ✨</button>
+            <div id="name-box" style="display: none; margin-top: 20px;">
+                <input type="text" id="nameInput" class="main-input" placeholder="اسم المستلم">
+                <button class="btn-action" onclick="generateLink()">إنشاء الرابط ✨</button>
+            </div>
         </div>
+
         <div id="result-step" style="display: none; text-align: center;">
             <p>جاهز للإرسال!</p>
             <div id="linkOutput" style="background:#000; padding:15px; border-radius:10px; font-size:10px; word-break:break-all; border:1px solid var(--pink-accent); margin-bottom: 15px;"></div>
@@ -153,53 +190,44 @@
         <div class="scene-container">
             <div class="light-circle c1"></div>
             <div class="light-circle c2"></div>
-            <div class="gold-star" style="top:20%; left:10%;">✦</div>
-            <div class="gold-star" style="top:40%; right:5%;">✧</div>
-            <div class="gold-star" style="bottom:15%; left:20%;">✦</div>
             <div class="name-capsule">
                 <div class="inner-name" id="sceneName"></div>
             </div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">زي لاول مرة بيحس بأمان....</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">بيحس بأمان...</h2>
+    </section>
+
+    <section>
+        <div class="image-scene-container">
+            <div class="glowing-heart">❤️</div>
+            <div class="divider-line"></div>
+            <div class="couples-frame">
+                <div class="person-shape"></div>
+                <div class="person-shape"></div>
+            </div>
+            <div class="stars-row">
+                <span class="gold-mini-star">★</span>
+                <span class="gold-mini-star">★</span>
+                <span class="gold-mini-star">★</span>
+                <span class="gold-mini-star">★</span>
+                <span class="gold-mini-star">★</span>
+            </div>
+            <div class="image-caption">خليك معايا</div>
+        </div>
     </section>
 
     <section>
         <div class="pro-clock">
-            <div class="clock-mark" style="transform: translateX(-50%) rotate(0deg);"></div>
-            <div class="clock-mark" style="transform: translateX(-50%) rotate(90deg);"></div>
-            <div class="clock-mark" style="transform: translateX(-50%) rotate(180deg);"></div>
-            <div class="clock-mark" style="transform: translateX(-50%) rotate(270deg);"></div>
-
             <div class="hand hour"></div>
             <div class="hand min"></div>
-            <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">خليك معايااا... ✨</div>
+            <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">كأنها أول مرة... ✨</div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;"></h2>
-    </section>
-
-    <section>
-        <div class="together-scene">
-            <div class="glow-bg"></div>
-            <div class="heart-glow">❤️</div>
-            <div class="figures-box">
-                <div class="person-icon"></div>
-                <div class="divider-line"></div>
-                <div class="person-icon"></div>
-            </div>
-            <div class="stars-row">
-                <div class="small-gold-star">★</div>
-                <div class="small-gold-star">★</div>
-                <div class="small-gold-star">★</div>
-                <div class="small-gold-star">★</div>
-                <div class="small-gold-star">★</div>
-            </div>
-        </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px; color: #fff;">خليك معايا</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">زي الاول مرة</h2>
     </section>
 
     <section>
         <div style="font-size: 80px;">💑</div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; background: linear-gradient(to bottom, #fff, var(--pink-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ياحلم عمري يلي فخيالي من زمان</h2>
+        <h2 class="big-name-text" style="font-size: 38px; padding: 0 15px;">ياحلم عمري يلي فخيالي من زمان...</h2>
         <p style="font-size: 12px; color: #555; margin-top: 50px;">تصميم عبدو غرلي</p>
     </section>
 </div>
@@ -207,12 +235,19 @@
 <audio id="player" loop></audio>
 
 <script>
-    let songUrl = "https://j.top4top.io/m_369843dq30.mp3";
+    let songUrl = "";
+
+    function selectSong(el, name, url) {
+        document.querySelectorAll('.song-option').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        songUrl = url; 
+        document.getElementById('name-box').style.display = 'block';
+    }
 
     function generateLink() {
         const name = document.getElementById('nameInput').value;
         if (!name) return alert("اكتب الاسم أولاً");
-        const link = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name);
+        const link = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name) + "&m=" + encodeURIComponent(songUrl);
         document.getElementById('setup-step').style.display = 'none';
         document.getElementById('result-step').style.display = 'block';
         document.getElementById('linkOutput').innerText = link;
@@ -233,6 +268,7 @@
             document.getElementById('greetName').innerText = "إلى " + name;
             document.getElementById('finalName').innerText = name;
             document.getElementById('sceneName').innerText = name;
+            songUrl = decodeURIComponent(params.get('m')) || "https://j.top4top.io/m_369843dq30.mp3";
             
             const box = document.getElementById('stars-box');
             for(let i=0; i<40; i++) {
@@ -259,7 +295,7 @@
                 top: current * window.innerHeight,
                 behavior: 'smooth'
             });
-        }, 6000); 
+        }, 6000);
     }
 </script>
 </body>
