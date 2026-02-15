@@ -14,6 +14,7 @@
             --pink-glow: rgba(248, 50, 146, 0.7);
             --gold: #ffcc00;
             --gradient-active: linear-gradient(to right, #9133a8, #f83292);
+            --shadow-bg: #050505; /* خلفية المشهد المطلوب */
         }
 
         body, html {
@@ -36,6 +37,14 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.8);
         }
 
+        .song-option {
+            background: #222332; border-radius: 20px; padding: 15px;
+            display: flex; align-items: center; margin-bottom: 15px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        }
+        .song-option.selected { border-color: var(--pink-accent); background: rgba(248, 50, 146, 0.1); }
+        .song-img { width: 55px; height: 55px; border-radius: 12px; margin-left: 15px; }
+
         .main-input {
             width: 100%; background: rgba(0,0,0,0.5); border: 2px solid var(--pink-accent);
             border-radius: 20px; padding: 15px; color: white;
@@ -46,8 +55,10 @@
             width: 100%; border: none; padding: 18px; border-radius: 50px;
             color: white; font-size: 18px; font-weight: bold;
             background: var(--gradient-active); cursor: pointer;
+            box-shadow: 0 5px 15px var(--pink-glow);
         }
 
+        /* واجهة العرض السينمائية */
         #view-screen { 
             display: none; height: 100vh; width: 100%; 
             overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none;
@@ -60,59 +71,89 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
-        /* --- تصميم الخطوة الثانية الجديد (مطابق للصورة) --- */
-        .step-2-bg {
-            background: radial-gradient(circle at center, #1a0b2e 0%, #050508 100%);
-            width: 100%; height: 100%; position: absolute; top:0; left:0;
+        /* النجوم الخلفية العامة */
+        .star {
+            position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%;
+            animation: twinkle 1.5s infinite;
+        }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; transform: scale(1.2); } }
+
+        .big-name-text {
+            font-family: 'Aref Ruqaa', serif; font-size: 60px;
+            background: linear-gradient(to bottom, #fff, var(--pink-accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            z-index: 2;
         }
 
-        /* الدوائر الضبابية خلف الاسم */
-        .blur-circles {
-            position: absolute; width: 300px; height: 200px;
-            display: flex; justify-content: center; align-items: center;
-            filter: blur(25px); opacity: 0.4; z-index: 1;
-        }
-        .b-circle {
-            position: absolute; background: #fff; border-radius: 50%;
-        }
-        .bc1 { width: 120px; height: 120px; left: 10%; }
-        .bc2 { width: 140px; height: 140px; left: 30%; opacity: 0.8; }
-        .bc3 { width: 110px; height: 110px; left: 60%; }
-
-        /* الاسم المتوهج */
-        .glow-name {
-            font-family: 'Aref Ruqaa', serif; font-size: 55px;
-            color: #ff8ec7; text-shadow: 0 0 20px #f83292, 0 0 40px rgba(248, 50, 146, 0.5);
-            z-index: 10; position: relative;
-        }
-
-        /* النجوم الذهبية المتناثرة */
-        .sparkle-star {
-            position: absolute; color: #ffcc00; font-size: 24px;
-            z-index: 5; filter: drop-shadow(0 0 5px #ffcc00);
-            animation: twinkle 2s infinite alternate;
-        }
-        @keyframes twinkle { from { opacity: 0.4; transform: scale(0.8); } to { opacity: 1; transform: scale(1.1); } }
-
-        /* الهلال */
-        .crescent-moon {
-            position: absolute; top: 38%; right: 18%; font-size: 40px;
-            color: #ffcc00; transform: rotate(-15deg); z-index: 5;
-            filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.5));
-        }
-
-        /* --- مشهد الظلال (الخطوة الرابعة) --- */
+        /* تصميم المشهد الجديد (محاكاة الصورة) */
         .shadow-scene {
-            width: 100%; height: 100%;
+            position: relative; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #1a1310 0%, #050505 100%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .heart-icon { font-size: 48px; filter: drop-shadow(0 0 15px #f00); animation: pulse 1.2s infinite; }
-        .v-line { width: 2px; height: 100px; background: linear-gradient(to bottom, #ffcc00, transparent); margin: 5px 0; }
-        .figs { display: flex; gap: 20px; align-items: flex-end; }
-        .fig-h { width: 35px; height: 35px; background: #000; border-radius: 50%; margin-bottom: 5px; }
-        .fig-b { width: 50px; height: 80px; background: #000; border-radius: 20px 20px 5px 5px; }
-        .stars-row { display: flex; gap: 12px; margin-top: 25px; color: #7a5a1e; font-size: 18px; }
+
+        .heart-icon {
+            font-size: 45px; margin-bottom: 10px;
+            filter: drop-shadow(0 0 15px rgba(255, 77, 77, 0.6));
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        .vertical-line {
+            width: 2px; height: 100px;
+            background: linear-gradient(to bottom, #ffcc00, transparent);
+            margin-bottom: -5px;
+        }
+
+        .figures-container {
+            display: flex; gap: 20px; align-items: flex-end;
+            position: relative; z-index: 2;
+        }
+
+        .figure {
+            width: 60px; height: 120px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .figure-head { width: 35px; height: 35px; background: #000; border-radius: 50%; margin-bottom: 5px; }
+        .figure-body { width: 50px; height: 80px; background: #000; border-radius: 20px 20px 5px 5px; }
+
+        .ground-glow {
+            position: absolute; bottom: 0; width: 150%; height: 300px;
+            background: radial-gradient(ellipse at center, rgba(82, 48, 26, 0.4) 0%, transparent 70%);
+            transform: perspective(500px) rotateX(60deg);
+            z-index: 1;
+        }
+
+        .gold-stars-row {
+            display: flex; gap: 15px; margin-top: 25px; color: rgba(255, 204, 0, 0.4);
+            font-size: 18px;
+        }
+
+        /* الساعة */
+        .pro-clock {
+            width: 240px; height: 240px; border: 4px solid #2a2235; border-radius: 50%;
+            position: relative; background: radial-gradient(circle, #1a1025 0%, #0a0b10 100%);
+            box-shadow: 0 0 40px rgba(145, 51, 168, 0.3);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pro-clock::after {
+            content: ''; position: absolute; width: 10px; height: 10px;
+            background: var(--gold); border-radius: 50%; z-index: 10;
+        }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 5; }
+        .hour { width: 7px; height: 55px; background: #b52a7e; animation: rotateHand 480s linear infinite; }
+        .min { width: 5px; height: 80px; background: #f83292; animation: rotateHand 120s linear infinite; }
+        
+        .clock-mark {
+            position: absolute; width: 2px; height: 12px;
+            background: #444; top: 10px; left: 50%;
+            transform-origin: 50% 110px;
+        }
+
+        @keyframes rotateHand {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg); }
+        }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -125,11 +166,20 @@
 <div class="maker-layout" id="maker-ui">
     <div class="step-card">
         <h2 style="text-align: center; color: var(--gold); font-family: 'Aref Ruqaa';">غنيلي 🎵</h2>
+        
         <div id="setup-step">
-            <input type="text" id="nameInput" class="main-input" placeholder="اسم المستلم">
-            <button class="btn-action" onclick="generateLink()">إنشاء الرابط ✨</button>
+            <div class="song-option" id="default-song" onclick="selectSong(this, 'خليك معايا', 'https://j.top4top.io/m_369843dq30.mp3')">
+                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" class="song-img">
+                <div style="text-align: right;"><strong>خليك معايا</strong><br><small>عمرو دياب</small></div>
+            </div>
+            <div id="name-box" style="display: none; margin-top: 20px;">
+                <input type="text" id="nameInput" class="main-input" placeholder="اسم المستلم">
+                <button class="btn-action" onclick="generateLink()">إنشاء الرابط ✨</button>
+            </div>
         </div>
+
         <div id="result-step" style="display: none; text-align: center;">
+            <p>جاهز للإرسال!</p>
             <div id="linkOutput" style="background:#000; padding:15px; border-radius:10px; font-size:10px; word-break:break-all; border:1px solid var(--pink-accent); margin-bottom: 15px;"></div>
             <button class="btn-action" onclick="copyLink()">نسخ الرابط 📋</button>
         </div>
@@ -137,67 +187,86 @@
 </div>
 
 <div id="start-overlay" style="display: none;">
+    <div style="font-size: 80px;">💖</div>
     <h2 id="greetName" style="font-family: 'Aref Ruqaa';"></h2>
     <button class="btn-action" style="width: 200px;" onclick="initExperience()">ابدأ الإهداء 🎵</button>
 </div>
 
 <div id="view-screen">
     <section>
-        <h1 style="font-family: 'Aref Ruqaa'; font-size: 60px; color: #fff;">يا حلم عمري</h1>
+        <div id="stars-box"></div>
+        <h1 class="big-name-text" id="finalName"></h1>
+        <p style="color: var(--gold); font-family: 'Aref Ruqaa'; font-size: 24px;">يا حلم عمري...</p>
     </section>
 
     <section>
-        <div class="step-2-bg"></div>
-        
-        <div class="blur-circles">
-            <div class="b-circle bc1"></div>
-            <div class="b-circle bc2"></div>
-            <div class="b-circle bc3"></div>
+        <div style="position: relative; width: 300px; height: 300px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.05); filter: blur(15px); width: 180px; height: 180px;"></div>
+            <div style="position: relative; padding: 15px 50px; background: rgba(20, 20, 30, 0.6); border-radius: 80px; z-index: 5; box-shadow: 0 0 30px rgba(0,0,0,0.5);">
+                <div class="inner-name" id="sceneName" style="font-family: 'Aref Ruqaa', serif; font-size: 45px; color: var(--pink-accent); text-shadow: 0 0 15px var(--pink-glow);"></div>
+            </div>
         </div>
-
-        <div class="crescent-moon">🌙</div>
-
-        <div class="sparkle-star" style="top:42%; left:18%;">✦</div>
-        <div class="sparkle-star" style="top:52%; left:22%;">✦</div>
-        <div class="sparkle-star" style="top:48%; right:22%;">✦</div>
-        <div class="sparkle-star" style="top:58%; right:26%;">✦</div>
-        <div class="sparkle-star" style="bottom:25%; left:45%;">✦</div>
-        <div class="sparkle-star" style="bottom:30%; left:55%;">✦</div>
-
-        <div class="glow-name" id="sceneName"></div>
-        
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 32px; color: #fff; margin-top: 150px; z-index:10; position:relative;">يا حلم عمري</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 25px;">بيحس بأمان...</h2>
     </section>
 
     <section>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px;">زي اول مرة...</h2>
+        <div class="pro-clock">
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(0deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(90deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(180deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(270deg);"></div>
+            <div class="hand hour"></div>
+            <div class="hand min"></div>
+            <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">كأنها أول مرة... ✨</div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">زي الاول مرة</h2>
     </section>
 
-    <section>
+    <section style="background: var(--shadow-bg);">
         <div class="shadow-scene">
             <div class="heart-icon">❤️</div>
-            <div class="v-line"></div>
-            <div class="figs">
-                <div><div class="fig-h"></div><div class="fig-b"></div></div>
-                <div><div class="fig-h"></div><div class="fig-b"></div></div>
+            <div class="vertical-line"></div>
+            <div class="figures-container">
+                <div class="figure">
+                    <div class="figure-head"></div>
+                    <div class="figure-body"></div>
+                </div>
+                <div class="figure">
+                    <div class="figure-head"></div>
+                    <div class="figure-body"></div>
+                </div>
             </div>
-            <div class="stars-row">
+            <div class="ground-glow"></div>
+            <div class="gold-stars-row">
                 <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
             </div>
-            <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; color: #fff; margin-top: 20px;">خليك معايا</h2>
+            <h2 style="font-family: 'Aref Ruqaa', serif; font-size: 45px; color: #fff; margin-top: 40px; z-index: 10;">خليك معايا</h2>
         </div>
+    </section>
+
+    <section>
+        <div style="font-size: 80px;">💑</div>
+        <h2 class="big-name-text" style="font-size: 38px; padding: 0 15px;">ياحلم عمري يلي فخيالي من زمان...</h2>
+        <p style="font-size: 12px; color: #555; margin-top: 50px;">تصميم عبدو غرلي</p>
     </section>
 </div>
 
 <audio id="player" loop></audio>
 
 <script>
-    let songUrl = "https://j.top4top.io/m_369843dq30.mp3";
-    
+    let songUrl = "";
+
+    function selectSong(el, name, url) {
+        document.querySelectorAll('.song-option').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected');
+        songUrl = url; 
+        document.getElementById('name-box').style.display = 'block';
+    }
+
     function generateLink() {
         const name = document.getElementById('nameInput').value;
         if (!name) return alert("اكتب الاسم أولاً");
-        const link = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name);
+        const link = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name) + "&m=" + encodeURIComponent(songUrl);
         document.getElementById('setup-step').style.display = 'none';
         document.getElementById('result-step').style.display = 'block';
         document.getElementById('linkOutput').innerText = link;
@@ -216,7 +285,18 @@
             document.getElementById('start-overlay').style.display = 'flex';
             document.getElementById('view-screen').style.display = 'block';
             document.getElementById('greetName').innerText = "إلى " + name;
+            document.getElementById('finalName').innerText = name;
             document.getElementById('sceneName').innerText = name;
+            songUrl = decodeURIComponent(params.get('m')) || "https://j.top4top.io/m_369843dq30.mp3";
+            
+            const box = document.getElementById('stars-box');
+            for(let i=0; i<40; i++) {
+                let s = document.createElement('div');
+                s.className = 'star';
+                s.style.top = Math.random()*100+'%';
+                s.style.left = Math.random()*100+'%';
+                box.appendChild(s);
+            }
         }
     };
 
@@ -225,12 +305,16 @@
         const audio = document.getElementById('player');
         audio.src = songUrl;
         audio.play();
+
         let current = 0;
         const sections = document.querySelectorAll('section');
         setInterval(() => {
             current = (current + 1) % sections.length;
-            document.getElementById('view-screen').scrollTo({ top: current * window.innerHeight, behavior: 'smooth' });
-        }, 5000);
+            document.getElementById('view-screen').scrollTo({
+                top: current * window.innerHeight,
+                behavior: 'smooth'
+            });
+        }, 6000);
     }
 </script>
 </body>
