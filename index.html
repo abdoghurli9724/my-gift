@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>غنيلي - إهداءات خاصة</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0a0b10;
+            --card-bg: #1a1b26;
+            --pink-accent: #f83292;
+            --pink-glow: rgba(248, 50, 146, 0.6);
+            --gold: #d4af37;
+            --gradient-active: linear-gradient(to right, #9133a8, #f83292);
+        }
+
+        body, html {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            margin: 0; padding: 0;
+            overflow: hidden; /* منع التمرير اليدوي للتحكم بالتجربة */
+            height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        /* نظام القلوب المتحركة */
+        .heart-fly {
+            position: fixed;
+            color: var(--pink-accent);
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 999;
+            animation: moveUp 4s linear forwards;
+        }
+
+        @keyframes moveUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* واجهة صانع الإهداء */
+        .app-container {
+            width: 100%; max-width: 420px;
+            margin: auto; padding: 20px;
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-logo { text-align: center; font-size: 40px; color: var(--gold); margin-bottom: 20px; font-weight: bold; }
+
+        .step-container {
+            background-color: var(--card-bg);
+            border-radius: 35px; padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative; z-index: 10;
+        }
+
+        /* قائمة الأغاني */
+        .song-card {
+            background: #222332; border-radius: 20px; padding: 12px;
+            display: flex; align-items: center; margin-bottom: 12px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.3s;
+        }
+        .song-card.selected { border-color: var(--pink-accent); background: rgba(248, 50, 146, 0.05); }
+        .song-img { width: 60px; height: 60px; border-radius: 12px; margin-left: 15px; }
+
+        .name-input {
+            width: 100%; background: rgba(0,0,0,0.4); border: 2px solid var(--pink-accent);
+            border-radius: 20px; padding: 15px; color: white;
+            font-family: 'Aref Ruqaa', serif; font-size: 35px;
+            text-align: center; outline: none; box-sizing: border-box;
+        }
+
+        .btn-main {
+            width: 100%; border: none; padding: 18px; border-radius: 50px;
+            color: white; font-size: 18px; font-weight: bold;
+            margin-top: 25px; background: var(--gradient-active); transition: 0.4s;
+            cursor: pointer; opacity: 0.5;
+        }
+        .btn-main.active { opacity: 1; box-shadow: 0 5px 20px rgba(248, 50, 146, 0.4); }
+
+        /* واجهة المستلم (نظام المشاهد) */
+        #view-screen { display: none; height: 100vh; width: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        #view-screen::-webkit-scrollbar { display: none; }
+
+        section {
+            height: 100vh; width: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            scroll-snap-align: start; text-align: center; position: relative;
+        }
+
+        .big-name {
+            font-family: 'Aref Ruqaa', serif; font-size: 65px;
+            background: linear-gradient(to bottom, #fff, var(--pink-accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px var(--pink-glow);
+        }
+
+        /* تأثيرات النبض والساعة */
+        .pulse-icon { font-size: 80px; animation: heartbeat 1.2s infinite; filter: drop-shadow(0 0 15px var(--pink-accent)); }
+        @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+        .clock-container {
+            width: 140px; height: 140px; border: 4px solid #333; border-radius: 50%;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px var(--pink-glow);
+        }
+        .clock-hand {
+            width: 4px; height: 50px; background: var(--pink-accent);
+            position: absolute; bottom: 50%; transform-origin: bottom;
+            animation: rotateHand 5s linear infinite;
+        }
+        @keyframes rotateHand { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* طبقة التشغيل الأولى */
+        #play-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: var(--bg-dark); z-index: 2000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="maker-interface">
+    <div class="header-logo">غنيلي</div>
+    <div class="step-container">
+        <div id="song-selection">
+            <h3 style="text-align: center;">اختر الأغنية 🎵</h3>
+            <div class="song-card" onclick="selectSong(this, 'خليك معايا', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')">
+                <div style="flex-grow:1; text-align:right;"><strong>خليك معايا</strong><br><small style="color:#8a8b9c">عمرو دياب</small></div>
+                <img src="https://i.ibb.co/VWV0pY6/amr.jpg" class="song-img">
+            </div>
+            <div class="song-card" onclick="selectSong(this, 'باقة ورد', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3')">
+                <div style="flex-grow:1; text-align:right;"><strong>يا باقة ورد انت</strong><br><small style="color:#8a8b9c">محمد عبد الجبار</small></div>
+                <img src="https://i.ibb.co/6yXyX6m/artist.jpg" class="song-img">
+            </div>
+        </div>
+
+        <div id="nameArea" style="display:none; margin-top: 20px;">
+            <h3 style="text-align: center;">اكتب الاسم ✍️</h3>
+            <input type="text" id="nameField" class="name-input" placeholder="حلوتي" oninput="validate()">
+            <button id="nextBtn" class="btn-main" onclick="generate()" disabled>إنشاء الرابط ←</button>
+        </div>
+
+        <div id="success-ui" style="display:none; text-align:center;">
+            <h3 style="color:#4caf50">✅ جاهز للإرسال!</h3>
+            <div id="finalLink" style="background:#000; padding:15px; border-radius:15px; font-size:11px; word-break:break-all; margin:20px 0; border:1px solid var(--pink-accent);"></div>
+            <button class="btn-main active" onclick="copyAction()">نسخ الرابط</button>
+        </div>
+    </div>
+</div>
+
+<div id="play-overlay" style="display: none;">
+    <div class="pulse-icon">🎁</div>
+    <h2 id="welcomeName">إلى حلوتي</h2>
+    <button class="btn-main active" style="width: 200px;" onclick="startStory()">افتح الإهداء 💌</button>
+</div>
+
+<div id="view-screen">
+    <section>
+        <span class="big-name" id="targetName">حلوتي</span>
+        <p style="color: var(--gold); font-size: 20px;">أنتِ كل عمري...</p>
+    </section>
+
+    <section>
+        <div class="pulse-icon">💓</div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px;">عارف بتعملي فيا إيه؟</h2>
+        <p style="color: #8a8b9c;">كل دقة قلب بتنادي باسمك</p>
+    </section>
+
+    <section>
+        <div class="clock-container"><div class="clock-hand"></div></div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 20px;">زي أول مرة...</h2>
+        <p style="color: #8a8b9c;">كأننا لسه في البداية</p>
+    </section>
+
+    <section>
+        <div style="font-size: 80px; filter: drop-shadow(0 0 20px gold);">🛡️</div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px;">بيحس بأمان</h2>
+        <p style="color: #8a8b9c;">حضنك هو ملجئي الوحيد</p>
+    </section>
+
+    <section>
+        <div class="pulse-icon">💖</div>
+        <h2 class="big-name" style="font-size: 40px;">خليك معايا</h2>
+        <p style="color: var(--gold);">تصميم وبرمجة حسين علي</p>
+    </section>
+</div>
+
+<audio id="bgMusic" loop></audio>
+
+<script>
+    let song = "";
+    let musicUrl = "";
+
+    // فحص الرابط عند الفتح
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('to')) {
+            document.getElementById('maker-interface').style.display = 'none';
+            document.getElementById('play-overlay').style.display = 'flex';
+            document.getElementById('view-screen').style.display = 'block';
+            
+            const name = decodeURIComponent(params.get('to'));
+            document.getElementById('targetName').innerText = name;
+            document.getElementById('welcomeName').innerText = "إلى " + name;
+            musicUrl = decodeURIComponent(params.get('m'));
+        }
+    };
+
+    function selectSong(el, name, url) {
+        document.querySelectorAll('.song-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        song = name; musicUrl = url;
+        document.getElementById('nameArea').style.display = 'block';
+        validate();
+    }
+
+    function validate() {
+        const val = document.getElementById('nameField').value.trim();
+        const btn = document.getElementById('nextBtn');
+        btn.disabled = !(val.length > 0 && song);
+        btn.classList.toggle('active', !btn.disabled);
+    }
+
+    function generate() {
+        const name = document.getElementById('nameField').value;
+        const finalUrl = window.location.origin + window.location.pathname + "?to=" + encodeURIComponent(name) + "&m=" + encodeURIComponent(musicUrl);
+        document.getElementById('song-selection').style.display = 'none';
+        document.getElementById('nameArea').style.display = 'none';
+        document.getElementById('success-ui').style.display = 'block';
+        document.getElementById('finalLink').innerText = finalUrl;
+    }
+
+    function copyAction() {
+        navigator.clipboard.writeText(document.getElementById('finalLink').innerText);
+        alert("تم نسخ الرابط بنجاح! أرسله الآن لمن تحب.");
+    }
+
+    // محرك القصة والتمرير التلقائي
+    function startStory() {
+        document.getElementById('play-overlay').style.fadeOut = "0.5s";
+        setTimeout(() => document.getElementById('play-overlay').style.display = 'none', 500);
+        
+        const player = document.getElementById('bgMusic');
+        player.src = musicUrl;
+        player.play();
+
+        let currentScene = 0;
+        const scenes = document.querySelectorAll('section');
+        const totalScenes = scenes.length;
+
+        // تأثير القلوب المستمر
+        setInterval(createHeart, 400);
+
+        // التمرير التلقائي كل 5 ثوانٍ
+        setInterval(() => {
+            currentScene++;
+            if (currentScene < totalScenes) {
+                document.getElementById('view-screen').scrollTo({
+                    top: currentScene * window.innerHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                // إعادة العرض أو الوقوف عند الأخير
+                currentScene = totalScenes - 1; 
+            }
+        }, 5000);
+    }
+
+    function createHeart() {
+        const h = document.createElement('div');
+        h.innerHTML = "❤️";
+        h.className = 'heart-fly';
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.animationDuration = (Math.random() * 2 + 2) + "s";
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 4000);
+    }
+</script>
+</body>
+</html>
