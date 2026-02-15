@@ -70,7 +70,7 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
-        /* النجوم */
+        /* النجوم الخلفية */
         .star {
             position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%;
             animation: twinkle 1.5s infinite;
@@ -84,15 +84,53 @@
             z-index: 2;
         }
 
-        /* الغيوم والقمر */
-        .moon {
-            width: 70px; height: 70px; background: #fffde1; border-radius: 50%;
-            box-shadow: 0 0 30px white; position: absolute; top: 10%; right: 15%;
+        /* --- تصميم مشهد الصورة (الإطارات والنجوم الذهبية) --- */
+        .scene-container {
+            position: relative; width: 300px; height: 300px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .cloud-svg { position: absolute; filter: blur(8px); opacity: 0.4; animation: moveCloud 25s linear infinite; }
-        @keyframes moveCloud { from { left: -20%; } to { left: 110%; } }
+        
+        /* الدوائر الخفيفة المتداخلة */
+        .light-circle {
+            position: absolute; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            filter: blur(15px);
+        }
+        .c1 { width: 150px; height: 150px; top: 10%; left: 10%; }
+        .c2 { width: 180px; height: 180px; bottom: 10%; right: 5%; }
+        .c3 { width: 120px; height: 120px; top: 40%; left: 30%; background: rgba(248, 50, 146, 0.03); }
 
-        /* الساعة المطابقة للصورة */
+        /* إطار الاسم المنحني */
+        .name-capsule {
+            position: relative; padding: 15px 50px;
+            background: rgba(20, 20, 30, 0.6);
+            border-radius: 80px; z-index: 5;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .inner-name {
+            font-family: 'Aref Ruqaa', serif; font-size: 45px;
+            color: var(--pink-accent); text-shadow: 0 0 15px var(--pink-glow);
+        }
+
+        /* النجوم الذهبية المتحركة */
+        .gold-star {
+            position: absolute; color: var(--gold); font-size: 20px;
+            animation: floatUpDown 3s infinite ease-in-out;
+            z-index: 6;
+        }
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-15px); opacity: 1; }
+        }
+
+        /* هلال صغير مثل الصورة */
+        .mini-moon {
+            position: absolute; top: 25%; right: 15%;
+            font-size: 25px; color: var(--gold); opacity: 0.8;
+            transform: rotate(-15deg);
+        }
+
+        /* الساعة المطابقة */
         .pro-clock {
             width: 240px; height: 240px; border: 4px solid #2a2235; border-radius: 50%;
             position: relative; background: radial-gradient(circle, #1a1025 0%, #0a0b10 100%);
@@ -121,15 +159,6 @@
             from { transform: translateX(-50%) rotate(0deg); }
             to { transform: translateX(-50%) rotate(360deg); }
         }
-
-        /* الفقاعة */
-        .bubble {
-            width: 150px; height: 150px; border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, rgba(248, 50, 146, 0.1), transparent);
-            animation: float 4s infinite ease-in-out;
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
         #start-overlay {
             position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
@@ -176,10 +205,24 @@
     </section>
 
     <section>
-        <div class="moon"></div>
-        <div class="cloud-svg" style="top:20%">☁️</div>
-        <div class="cloud-svg" style="top:40%; animation-delay: -5s;">☁️</div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px;">زي لاول مرة بيحس بأمان...</h2>
+        <div class="scene-container">
+            <div class="light-circle c1"></div>
+            <div class="light-circle c2"></div>
+            <div class="light-circle c3"></div>
+            
+            <div class="mini-moon">🌙</div>
+
+            <div class="gold-star" style="top:20%; left:10%; animation-delay: 0s;">✦</div>
+            <div class="gold-star" style="top:15%; left:25%; animation-delay: 0.5s;">✧</div>
+            <div class="gold-star" style="top:40%; right:10%; animation-delay: 1s;">✦</div>
+            <div class="gold-star" style="bottom:20%; left:15%; animation-delay: 0.3s;">✧</div>
+            <div class="gold-star" style="bottom:30%; right:20%; animation-delay: 0.7s;">✦</div>
+
+            <div class="name-capsule">
+                <div class="inner-name" id="sceneName"></div>
+            </div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 20px; color: white;">يا حلم عمري...</h2>
     </section>
 
     <section>
@@ -201,17 +244,12 @@
             <div class="hand min"></div>
             <div class="inner-clock-text">خليك معايا... ✨</div>
         </div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px;"></h2>
-    </section>
-
-    <section>
-        <div class="bubble"><div style="font-size: 50px;">👤❤️</div></div>
-        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px;">ياحبيبي مهما كاااان...</h2>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 30px; color: white;">زي الأول مرة...</h2>
     </section>
 
     <section>
         <div style="font-size: 80px;">💑</div>
-        <h2 class="big-name-text" style="font-size: 40px; padding: 0 15px;">ياحلم عمري يلي فخيالي من زماااان...</h2>
+        <h2 class="big-name-text" style="font-size: 35px; padding: 0 15px;">ياحلم عمري يلي فخيالي من زماااان...</h2>
         <p style="font-size: 12px; color: #555; margin-top: 40px;">تصميم عبدو غرلي</p>
     </section>
 </div>
@@ -245,11 +283,13 @@
     window.onload = function() {
         const params = new URLSearchParams(window.location.search);
         if (params.has('to')) {
+            const name = decodeURIComponent(params.get('to'));
             document.getElementById('maker-ui').style.display = 'none';
             document.getElementById('start-overlay').style.display = 'flex';
             document.getElementById('view-screen').style.display = 'block';
-            document.getElementById('greetName').innerText = "إلى " + decodeURIComponent(params.get('to'));
-            document.getElementById('finalName').innerText = decodeURIComponent(params.get('to'));
+            document.getElementById('greetName').innerText = "إلى " + name;
+            document.getElementById('finalName').innerText = name;
+            document.getElementById('sceneName').innerText = name;
             songUrl = decodeURIComponent(params.get('m')) || "https://j.top4top.io/m_369843dq30.mp3";
             
             const box = document.getElementById('stars-box');
@@ -277,7 +317,7 @@
                 top: current * window.innerHeight,
                 behavior: 'smooth'
             });
-        }, 6000); // سرعة التمرير 6 ثواني
+        }, 6000); 
     }
 </script>
 </body>
