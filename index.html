@@ -414,16 +414,43 @@
         audio.src = songUrl;
         audio.play();
 
+        startAutoScroll(); // استدعاء دالة التمرير الذكية هنا
+    }
+
+
         let current = 0;
         const sections = document.querySelectorAll('section');
-        setInterval(() => {
+    function startAutoScroll() {
+        let current = 0;
+        const sections = document.querySelectorAll('section');
+        const viewScreen = document.getElementById('view-screen');
+
+        function scrollNext() {
             current = (current + 1) % sections.length;
-            document.getElementById('view-screen').scrollTo({
+            
+            viewScreen.scrollTo({
                 top: current * window.innerHeight,
                 behavior: 'smooth'
             });
-        }, 10000); // سرعة التمرير 6 ثواني
+
+            // تحديد وقت الانتظار بناءً على المشهد
+            // إذا كان المشهد الحالي هو الأخير (الخاتمة)
+            let waitTime;
+            if (current === sections.length - 1) {
+                waitTime = 12000; // وقت طويل للخاتمة (12 ثانية مثلاً) قبل العودة للبداية
+            } else if (current === 0) {
+                waitTime = 6000; // وقت المشهد الأول بعد العودة
+            } else {
+                waitTime = 6000; // وقت باقي الانتقالات العادية
+            }
+
+            setTimeout(scrollNext, waitTime);
+        }
+
+        // ابدأ أول انتقال بعد 6 ثوانٍ من التشغيل
+        setTimeout(scrollNext, 6000);
     }
+
 </script>
 </body>
 </html>
