@@ -70,7 +70,7 @@
             scroll-snap-align: start; text-align: center; overflow: hidden;
         }
 
-        /* النجوم الخلفية */
+        /* النجوم */
         .star {
             position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%;
             animation: twinkle 1.5s infinite;
@@ -84,55 +84,39 @@
             z-index: 2;
         }
 
-        /* استايل المشهد الجديد (الصورة المرفقة) */
-        .image-scene-container {
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #2c1a10 0%, #000000 80%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            position: relative;
+        /* تصميم مشهد الإطار والنجوم الذهبية */
+        .scene-container {
+            position: relative; width: 300px; height: 300px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .light-circle {
+            position: absolute; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            filter: blur(15px);
+        }
+        .c1 { width: 150px; height: 150px; top: 10%; left: 10%; }
+        .c2 { width: 180px; height: 180px; bottom: 10%; right: 5%; }
+
+        .name-capsule {
+            position: relative; padding: 15px 50px;
+            background: rgba(20, 20, 30, 0.6);
+            border-radius: 80px; z-index: 5;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+        .inner-name {
+            font-family: 'Aref Ruqaa', serif; font-size: 45px;
+            color: var(--pink-accent); text-shadow: 0 0 15px var(--pink-glow);
         }
 
-        .glowing-heart {
-            font-size: 50px; color: #ff4d4d;
-            filter: drop-shadow(0 0 15px #ff4d4d);
-            margin-bottom: 20px;
-            animation: pulseHeart 2s infinite;
+        .gold-star {
+            position: absolute; color: var(--gold); font-size: 20px;
+            animation: floatUpDown 3s infinite ease-in-out;
+            z-index: 6;
         }
-        @keyframes pulseHeart {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        .divider-line {
-            width: 2px; height: 120px;
-            background: linear-gradient(to bottom, #f39c12, transparent);
-            margin-bottom: 5px;
-        }
-
-        .couples-frame {
-            display: flex; gap: 20px; align-items: flex-end;
-            margin-bottom: 30px;
-        }
-
-        .person-shape {
-            width: 60px; height: 110px; background: #000;
-            border-radius: 30px 30px 5px 5px; position: relative;
-        }
-        .person-shape::before {
-            content: ''; position: absolute; top: -45px; left: 50%;
-            transform: translateX(-50%); width: 45px; height: 45px;
-            background: #000; border-radius: 50%;
-        }
-
-        .stars-row {
-            display: flex; gap: 15px; margin-bottom: 40px;
-        }
-        .gold-mini-star { color: #d4af37; font-size: 18px; opacity: 0.6; }
-
-        .image-caption {
-            font-family: 'Aref Ruqaa', serif; font-size: 32px; color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-15px); opacity: 1; }
         }
 
         /* الساعة */
@@ -142,10 +126,39 @@
             box-shadow: 0 0 40px rgba(145, 51, 168, 0.3);
             display: flex; align-items: center; justify-content: center;
         }
+        .pro-clock::after {
+            content: ''; position: absolute; width: 10px; height: 10px;
+            background: var(--gold); border-radius: 50%; z-index: 10;
+        }
         .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 5; }
         .hour { width: 7px; height: 55px; background: #b52a7e; animation: rotateHand 480s linear infinite; }
         .min { width: 5px; height: 80px; background: #f83292; animation: rotateHand 120s linear infinite; }
-        @keyframes rotateHand { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+        
+        .clock-mark {
+            position: absolute; width: 2px; height: 12px;
+            background: #444; top: 10px; left: 50%;
+            transform-origin: 50% 110px;
+        }
+
+        @keyframes rotateHand {
+            from { transform: translateX(-50%) rotate(0deg); }
+            to { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        /* الفقاعة العائمة (التي كانت محذوفة) */
+        .bubble-scene {
+            width: 160px; height: 160px; border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, rgba(248, 50, 146, 0.15), transparent);
+            animation: bubbleFloat 4s infinite ease-in-out;
+            position: relative;
+        }
+        @keyframes bubbleFloat { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-25px) scale(1.05); } }
+
+        #start-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-dark);
+            z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -190,6 +203,9 @@
         <div class="scene-container">
             <div class="light-circle c1"></div>
             <div class="light-circle c2"></div>
+            <div class="gold-star" style="top:20%; left:10%;">✦</div>
+            <div class="gold-star" style="top:40%; right:5%;">✧</div>
+            <div class="gold-star" style="bottom:15%; left:20%;">✦</div>
             <div class="name-capsule">
                 <div class="inner-name" id="sceneName"></div>
             </div>
@@ -198,31 +214,24 @@
     </section>
 
     <section>
-        <div class="image-scene-container">
-            <div class="glowing-heart">❤️</div>
-            <div class="divider-line"></div>
-            <div class="couples-frame">
-                <div class="person-shape"></div>
-                <div class="person-shape"></div>
-            </div>
-            <div class="stars-row">
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-                <span class="gold-mini-star">★</span>
-            </div>
-            <div class="image-caption">خليك معايا</div>
-        </div>
-    </section>
-
-    <section>
         <div class="pro-clock">
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(0deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(90deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(180deg);"></div>
+            <div class="clock-mark" style="transform: translateX(-50%) rotate(270deg);"></div>
+
             <div class="hand hour"></div>
             <div class="hand min"></div>
             <div style="position: absolute; bottom: 40px; color: #a555ec; font-family: 'Aref Ruqaa'; font-size: 15px;">كأنها أول مرة... ✨</div>
         </div>
         <h2 style="font-family: 'Aref Ruqaa'; font-size: 38px; margin-top: 30px;">زي الاول مرة</h2>
+    </section>
+
+    <section>
+        <div class="bubble-scene">
+            <div style="font-size: 65px;">👤❤️</div>
+        </div>
+        <h2 style="font-family: 'Aref Ruqaa'; font-size: 35px; margin-top: 40px;">خليك معايا ياحبيبي مهما كان</h2>
     </section>
 
     <section>
@@ -295,7 +304,7 @@
                 top: current * window.innerHeight,
                 behavior: 'smooth'
             });
-        }, 6000);
+        }, 6000); // سرعة التمرير 6 ثواني
     }
 </script>
 </body>
